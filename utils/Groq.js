@@ -100,7 +100,7 @@ EXTRACTION RULES
 5. If no syllabus → infer from repetition and phrasing in exam paper.
 6. Merge equivalent question patterns into ONE topic.
 7. Ignore instructions, marks, section labels, and rare one-off theory questions.
-8. Minimum Of 12 topics must be provided
+8. Minimum Of 15 topics must be provided
 
 SEARCH QUERIES (IMPORTANT)
 For each main_topic generate:

@@ -20,7 +20,6 @@ app.use("/files",FileRouter);
 
 app.get("/",(req,res)=>{
     console.log(process.env.GOOGLE_APPLICATION_CREDENTIALS);
-    
     res.send("hello");
 })
 
