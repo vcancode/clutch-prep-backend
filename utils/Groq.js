@@ -3,9 +3,7 @@ import "dotenv/config";
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
-/* ---------------- QUESTION PREFIX ---------------- */
-const QUESTION_PREFIX_REGEX =
-  /^\s*(q\d+(\.\d+)?|question\s*\d+|[a-z]\)|\([a-z]\)|\d+\)|\d+\.|co\s*\d+|\d+\s+\d+|\(\d+x\d+\))\s*/i;
+
 
 /* ---------------- UNIVERSAL JUNK FILTER ---------------- */
 const JUNK_LINE_REGEX = new RegExp(
@@ -82,19 +80,11 @@ CORE RULE
 Each main_topic MUST be a QUESTION-SOLVING UNIT that can be:
 solved / derived / constructed / traced / implemented in an exam.
 
-VALID:
-"Solving 0/1 Knapsack using DP table"
-"Functional implementation of multiplexer"
-
-INVALID:
-"Dynamic Programming"
-"Digital Electronics"
-
 Abstract paradigms may appear ONLY as side_topics.
 
 EXTRACTION RULES
 1. main_topic must map to a realistic 5–15 mark exam question.
-2. If a topic cannot be directly asked as a question → EXCLUDE it.
+2. sort the json file in a priority order from begenning topics to the complex topics
 3. For each main_topic, extract ≤3 MINIMAL prerequisites from basics that a student must know to even work on that topic(≤10 min learnable).
 4. If SYLLABUS is provided → extract ONLY syllabus-aligned questions.
 5. If no syllabus → infer from repetition and phrasing in exam paper.
