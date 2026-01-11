@@ -132,7 +132,8 @@ OUTPUT FORMAT (STRICT JSON)
       "definition": "",
       "topic_query": "",
       "playlist_query": "",
-      "question_types": []
+      "question_types": [],
+      "completed":false(by default)
     }
   ]
 }
