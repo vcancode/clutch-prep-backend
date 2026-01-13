@@ -82,7 +82,7 @@ Each main_topic must be a QUESTION-SOLVING UNIT suitable for a 5–15 mark exam
 Abstract concepts allowed ONLY as side_topics.
 
 RULES
-1. Minimum 20 main_topic entries.
+1. Minimum 13 main_topic entries.
 2. Sort topics from foundational → advanced.
 3. Each main_topic: ≤3 minimal prerequisites (≤10 min learnable).
 4. If syllabus exists → ONLY syllabus-aligned topics.
@@ -99,11 +99,11 @@ For each main_topic:
 FOR EACH MAIN_TOPIC RETURN
 - priority: high | medium | low
 - difficulty: easy | moderate | hard
-- definition: ~40 words (exam-solving strategy)
+- definition: ~30 words (exam-solving strategy)
 - side_topics: ≤3
 - topic_query
 - playlist_query
-- question_types: 3–4 realistic exam-style patterns
+- question_types: 3 realistic exam-style patterns
 
 STRICT OUTPUT
 - Question-solving topics only
@@ -114,7 +114,7 @@ STRICT OUTPUT
 
 OUTPUT FORMAT
 {
-  "subject": "<string or null>",
+  "subject": "<string>",
   "subject_query": "<string>",
   "topics": [
     {
@@ -145,7 +145,7 @@ ${cleanedExamText}
     {
       model: "openai/gpt-oss-120b",
       messages: [{ role: "user", content: finalPrompt }],
-      temperature: 0.2
+      temperature: 0.2,
     },
     {
       headers: {
