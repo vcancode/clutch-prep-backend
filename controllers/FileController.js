@@ -41,6 +41,7 @@ const ClassifyFiles = async (req, res) => {
 const FetchQuestions= async(req,res)=>{
    try {
      const syllabusfile=req.files?.syllabus?.[0]||0;
+
    let textChunks = [];
    let SyllabusChunks=[];
 

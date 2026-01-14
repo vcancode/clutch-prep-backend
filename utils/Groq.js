@@ -1,5 +1,6 @@
 import axios from "axios";
 import "dotenv/config";
+import { enrichGroqJson } from "./YoutubeFetcher.js";
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
@@ -82,7 +83,7 @@ Each main_topic must be a QUESTION-SOLVING UNIT suitable for a 5–15 mark exam
 Abstract concepts allowed ONLY as side_topics.
 
 RULES
-1. Minimum 13 main_topic entries.
+1. Strictly provide 10 main_topic entries.
 2. Sort topics from foundational → advanced.
 3. Each main_topic: ≤3 minimal prerequisites (≤10 min learnable).
 4. If syllabus exists → ONLY syllabus-aligned topics.
@@ -115,7 +116,6 @@ STRICT OUTPUT
 OUTPUT FORMAT
 {
   "subject": "<string>",
-  "subject_query": "<string>",
   "topics": [
     {
       "main_topic": "",
@@ -159,14 +159,15 @@ ${cleanedExamText}
     .replace(/<think>[\s\S]*?<\/think>/gi, "")
     .trim();
 
-  let parsed;
+  let parsed,YoutubeAppende;
   try {
     parsed = JSON.parse(output);
+     YoutubeAppende=enrichGroqJson(parsed);
   } catch {
     throw new Error("LLM returned invalid JSON");
   }
 
-  return parsed;
+  return YoutubeAppende;
 }
 
 export default analyzeExamText;
