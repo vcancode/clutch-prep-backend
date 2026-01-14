@@ -124,7 +124,6 @@ OUTPUT FORMAT
       "side_topics": [],
       "definition": "",
       "topic_query": "",
-      "playlist_query": "",
       "question_types": []
     }
   ]
