@@ -203,7 +203,48 @@ OUTPUT FORMAT (STRICT JSON ONLY):
   }
 };
 
+const saveDocument = async (req, res) => {
+  try {
+    const userId = req.userdata.id;     // ✅ from JWT
+    const documentData = req.body;      // ✅ full document sent
+
+    if (!documentData?._id) {
+      return res.status(400).json({ error: "DOCUMENT_ID_REQUIRED" });
+    }
+
+    if (!documentData?.jsonFile || typeof documentData.jsonFile !== "object") {
+      return res.status(400).json({ error: "INVALID_JSON_FILE" });
+    }
+
+    // 🔒 Fetch existing document & enforce ownership
+    const document = await Document.findOne({
+      _id: documentData._id,
+      userId
+    });
+
+    if (!document) {
+      return res.status(404).json({ error: "DOCUMENT_NOT_FOUND" });
+    }
+
+    // 🔁 Replace JSON completely
+    document.jsonFile = documentData.jsonFile;
+
+    // 🔥 Required for Mixed type
+    document.markModified("jsonFile");
+    await document.save();
+
+    return res.status(200).json({
+      message: "DOCUMENT_UPDATED",
+      documentId: document._id
+    });
+
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
 
 
-export  {ClassifyFiles,FetchQuestions,GetDocuments,GetQuiz};
+
+
+export  {ClassifyFiles,FetchQuestions,GetDocuments,GetQuiz,saveDocument};
 

@@ -75,7 +75,7 @@ export const enrichGroqJson = async (req, res) => {
 
     document.markModified("jsonFile"); // !because of mixed data type we have to inform mongodb that it has been modified 
 
-    await document.save();
+    const newdocument = await document.save();
    
 
     // 6️⃣ Update user's YouTube usage timestamp
@@ -84,7 +84,7 @@ export const enrichGroqJson = async (req, res) => {
 
     return res.status(200).json({
       message: "DOCUMENT_ENRICHED_AND_UPDATED",
-      documentId: document._id
+      document:newdocument
     });
 
   } catch (error) {
