@@ -1,8 +1,8 @@
 
 import extractAndAppendText from "../utils/TextExtract.js";
-import analyzeExamText from "../utils/Groq.js";
+import { analyzeExamText, generateQuiz } from "../utils/Gemini.js";
 import Document from "../Models/GroqDataSchema.js";
-import axios from "axios";
+
 
 /* ---------------- CONTROLLER ---------------- */
 
@@ -74,11 +74,10 @@ const FetchQuestions = async (req, res) => {
       await extractAndAppendText(syllabusFile, syllabusChunks);
       syllabusText = syllabusChunks.join("\n");
     }
-
+    // Analyze with Groq
     console.log(finalText);
     
-    // Analyze with Groq
-    const groqdata = await analyzeExamText(finalText, syllabusText);
+    const groqdata = await analyzeExamText(finalText,syllabusText);
 
     // Save document
     await Document.create({
@@ -107,9 +106,7 @@ const GetDocuments= async(req,res)=>{
 
 
 
-const GROQ_API_KEY = process.env.GROQ_API_KEY;
-
- const GetQuiz = async (req, res) => {
+const GetQuiz = async (req, res) => {
   try {
     console.log("inside quiz");
     
@@ -133,74 +130,8 @@ const GROQ_API_KEY = process.env.GROQ_API_KEY;
       return res.status(400).json({ error: "INVALID_DOCUMENT_JSON" });
     }
 
-    // 2️⃣ Build quiz prompt
-    const prompt = `
-You are an EXAM QUIZ GENERATOR.
-
-INPUT:
-- Subject: ${analysisJson.subject}
-- Topics (with difficulty & priority): ${JSON.stringify(
-      analysisJson.topics,
-      null,
-      2
-    )}
-
-TASK:
-Generate EXACTLY 10 MCQ questions for exam practice.
-
-RULES:
-- Each question must be derived from the given topics
-- 4 options per question
-- One correct option only
-- Mix difficulties (easy, moderate, hard)
-- Avoid vague or theory-only questions
-- No explanations
-
-OUTPUT FORMAT (STRICT JSON ONLY):
-{
-  "subject": "${analysisJson.subject}",
-  "quiz": [
-    {
-      "question": "",
-      "options": ["", "", "", ""],
-      "answerIndex":,
-      "topic": "",
-      "difficulty": ""
-    }
-  ]
-}
-`;
-
-    // 3️⃣ Call Groq
-    const response = await axios.post(
-      "https://api.groq.com/openai/v1/chat/completions",
-      {
-        model: "openai/gpt-oss-120b",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.2
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${GROQ_API_KEY}`,
-          "Content-Type": "application/json"
-        }
-      }
-    );
-
-    const output = response.data.choices[0].message.content
-      .replace(/<think>[\s\S]*?<\/think>/gi, "")
-      .trim();
-      console.log(output);
-      
-
-    let quizJson;
-    try {
-      quizJson = JSON.parse(output);
-      console.log(quizJson);
-      
-    } catch {
-      return res.status(500).json({ error: error.message});
-    }
+    // 2️⃣ Generate quiz with Gemini (>= 15 MCQs) + Zod validation
+    const quizJson = await generateQuiz(analysisJson);
 
     return res.status(200).json(quizJson);
 
